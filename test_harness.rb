@@ -9,11 +9,6 @@ class TestHarness
     :modify_and_echo  => "%s --modify_and_echo -f modify_and_echo.json",
   }
 
-  INPUT_FILES = {
-    :serialize => 'serialize.json',
-    :deserialize => 'deserialize.json'
-  }
-
   def initialize
     @stats = Hash.new do |h,k|
       h[k] = Hash.new{|hh,kk| hh[kk] = {} }
@@ -21,10 +16,7 @@ class TestHarness
   end
 
   def clients
-    [
-      './protobufs',
-      './avro'
-    ]
+    %w(./avro ./messagepack ./protobufs ./rest_json ./thrift ./websockets)
   end
 
   def run
