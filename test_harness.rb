@@ -3,10 +3,10 @@
 class TestHarness
 
   TEST_CASES = {
-    :serialize        => "%s --serialize -f serialize.json",
-    :deserialize      => "%s --deserialize -f deserialize.json",
-    :echo             => "%s --echo -f echo.json",
-    :modify_and_echo  => "%s --modify_and_echo -f modify_and_echo.json",
+    :serialize        => "%s --serialize --object #{type} -f serialize.json",
+    :deserialize      => "%s --deserialize --object #{type} -f deserialize.json",
+    :echo             => "%s --echo --object #{type} --host #{host} -f echo.json",
+    :modify_and_echo  => "%s --modify_and_echo --object #{type} --host #{host} --increment #{increment_key} --replace_key #{replace_key} --replace_value #{replace_value} -f modify_and_echo.json",
   }
 
   INPUT_FILES = {
@@ -49,6 +49,10 @@ class TestHarness
 
   def stats
     @stats
+  end
+
+  def graph_results(results)
+
   end
 
 end
