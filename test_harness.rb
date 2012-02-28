@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 
 $:.unshift(File.dirname(__FILE__))
+require 'rubygems'
+require 'erubis'
 require 'test_harness/option_parser'
 
 module TestHarness
@@ -15,7 +17,7 @@ class Runner
 
   CLIENTS = %w(./avro ./messagepack ./protobufs ./rest_json ./thrift ./websockets).freeze
 
-  MODIFT_ECHO_PARAMS = [
+  MODIFY_ECHO_PARAMS = [
     {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle.json'         },
     {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle_big.json'     },
     {'type' => 'creative',       'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'creative.json'       },
@@ -80,7 +82,7 @@ class Runner
 
   def modify_and_echo(client, test_case, test_cmd)
     puts "\n\nMODIFY_AND_ECHO   CLIENT=#{client}  TEST_CASE=#{test_case}  TEST_CMD=#{test_cmd}"
-    MODIFT_ECHO_PARAMS.each do |params|
+    MODIFY_ECHO_PARAMS.each do |params|
       start = Time.now
       test_case_type = "#{test_case}-#{params['type']}"
       cmd   = replace_placeholders(test_cmd, params)
@@ -108,7 +110,14 @@ class Runner
   end
 
   def graph_results(results)
-
+    template_file = "results.html.erb"
+    template = Erubis::Eruby.load_file(template_file)
+    template.result({
+      :clients => CLIENTS,
+      :tests => TEST_CASES.keys,
+      :objects => MODIFY_ECHO_PARAMS.collect {|p| p['type']},
+      :data => data # data is a nested hash: data[client][test][object]
+    })
   end
 
 end
