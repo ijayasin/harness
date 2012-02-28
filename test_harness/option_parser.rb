@@ -13,6 +13,7 @@ module TestHarness
       opts.clients    = nil
       opts.test_cases = nil
       opts.host       = nil
+      opts.stats_path = nil
       opts
     end
 
@@ -35,6 +36,10 @@ module TestHarness
 
         opts.on("--host HOST_NAME", "Specify the host of the server.") do |host|
           options.host = host
+        end
+
+        opts.on("--stats_path path/to/stats/files", "Specify the path to where the stats files should be saved.") do |path|
+          options.stats_path = path
         end
 
         opts.on("-h", "--help", "Show this message") do
