@@ -17,21 +17,22 @@ class Runner
   }.freeze
 
   CLIENTS = Dir.glob("./clients/*").freeze
-  INPUTS = Dir.glob("./inputs/*").freeze
+  INPUTS  = Dir.glob("./inputs/*").freeze
 
-  MODIFY_ECHO_PARAMS = [
-    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle.json'         },
-    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle_big.json'     },
-    {'type' => 'creative',       'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'creative.json'       },
-    {'type' => 'line_item',      'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'line_item.json'      },
-    {'type' => 'lisp_stats',     'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'lisp_stats.json'     },
-    {'type' => 'org',            'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'org.json'            },
-    {'type' => 'site_placement', 'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'site_placement.json' }
+  MODIFT_ECHO_PARAMS = [
+    {'type' => 'bundle',         'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'BUNDLE',    'file' => 'bundle.json'         },
+    {'type' => 'bundle',         'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'BUNDLE',    'file' => 'bundle_big.json'     },
+    {'type' => 'creative',       'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'CREATIVE',  'file' => 'creative.json'       },
+    {'type' => 'line_item',      'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'LINE_ITEM', 'file' => 'line_item.json'      },
+    {'type' => 'lisp_stats',     'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val',   'file' => 'lisp_stats.json'     },
+    {'type' => 'org',            'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'ORG',       'file' => 'org.json'            },
+    {'type' => 'site_placement', 'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'SP',        'file' => 'site_placement.json' }
   ]
 
   SPECIAL_TESTS = %w(modify_and_echo)
 
   def initialize
+    @start_time = Time.now
     @stats = Hash.new do |h,k|
       h[k] = Hash.new{|hh,kk| hh[kk] = {} }
     end
