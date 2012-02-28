@@ -16,7 +16,8 @@ class Runner
     'modify_and_echo'  => "%s --modify_and_echo --object $$TYPE$$ --host $$HOST$$ --increment $$INCREMENT_KEY$$ --replace_key $$REPLACE_KEY$$ --replace_value $$REPLACE_VALUE$$ -f $$FILE$$"
   }.freeze
 
-  CLIENTS = %w(./clients/avro ./clients/messagepack ./clients/protobufs ./clients/rest_json ./clients/thrift ./clients/websockets).freeze
+  CLIENTS = Dir.glob("./clients/*").freeze
+  INPUTS = Dir.glob("./inputs/*").freeze
 
   MODIFY_ECHO_PARAMS = [
     {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle.json'         },
