@@ -19,7 +19,7 @@ class Runner
   CLIENTS = Dir.glob("./clients/*").freeze
   INPUTS  = Dir.glob("./inputs/*").freeze
 
-  MODIFT_ECHO_PARAMS = [
+  MODIFY_ECHO_PARAMS = [
     {'type' => 'bundle',         'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'BUNDLE',    'file' => 'bundle.json'         },
     {'type' => 'bundle',         'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'BUNDLE',    'file' => 'bundle_big.json'     },
     {'type' => 'creative',       'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'CREATIVE',  'file' => 'creative.json'       },
@@ -60,6 +60,8 @@ class Runner
     end
 
     pp stats
+
+    StatsWriter.new(@start_time, :path=>@options.stats_path).save(@stats)
   end
 
   def test(client)

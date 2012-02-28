@@ -6,20 +6,26 @@ require 'yaml'
 module TestHarness
   class StatsWriter
 
-    def initialize(start_time, path)
-      
+    STATS_DIR = File.expand_path('./stats').freeze
+
+    def initialize(start_time, opts={})
+      @start_time = start_time
+      @opts = opts || {}
     end
 
-    def save(obj)
-      File.open( 'animals.yaml', 'w' ) do |out|
-        YAML.dump( ['badger', 'elephant', 'tiger'], out )
+    def save(stats_obj)
+      File.open( filename, 'w' ) do |out|
+        puts "\nWriting stats object to \"#{filename}\"\n"
+        YAML.dump( stats_obj, out )
       end
     end
 
     protected
 
     def filename
-      File.join(path, "#{}")
+      date = @start_time.strftime("%Y%m%d_%H%M%S")
+      path = @opts[:path] || STATS_DIR
+      File.join(path, "out-#{date}.yaml")
     end
 
   end
