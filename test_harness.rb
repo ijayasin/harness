@@ -1,13 +1,19 @@
 #!/usr/bin/ruby
 
-class TestHarness
+$:.unshift(File.dirname(__FILE__))
+require 'test_harness/option_parser'
+
+module TestHarness
+class Runner
 
   TEST_CASES = {
-    :serialize        => "%s --serialize -f serialize.json",
-    :deserialize      => "%s --deserialize -f deserialize.json",
-    :echo             => "%s --echo -f echo.json",
-    :modify_and_echo  => "%s --modify_and_echo -f modify_and_echo.json",
-  }
+    'serialize'       => "%s --serialize -f serialize.json",
+    'deserialize'     => "%s --deserialize -f deserialize.json",
+    'echo'            => "%s --echo -f echo.json",
+    'modify_and_echo' => "%s --modify_and_echo -f modify_and_echo.json",
+  }.freeze
+
+  CLIENTS = %w(./avro ./messagepack ./protobufs ./rest_json ./thrift ./websockets).freeze
 
   def initialize
     @stats = Hash.new do |h,k|
@@ -16,10 +22,22 @@ class TestHarness
   end
 
   def clients
-    %w(./avro ./messagepack ./protobufs ./rest_json ./thrift ./websockets)
+    clnts = (@options && @options.clients)
+    clnts.reject{|v| v.nil? || v.empty?} if clnts
+    clnts || CLIENTS
   end
 
-  def run
+  def cases
+    if @options && @options.test_cases
+      @options.test_cases.reject{|v| v.nil? || v.emtpy?}
+    else
+      TEST_CASES.keys
+    end
+  end
+
+  def run(args=nil)
+    @options = TestHarness::OptionParser.parse(args)
+
     clients.each do |client|
       test client
     end
@@ -28,13 +46,15 @@ class TestHarness
   end
 
   def test(client)
-    TEST_CASES.each do |test_case, test_cmd|
+    ((@options && @options.test_cases) || TEST_CASES.keys).each do |test_case|
+      test_cmd = TEST_CASES[test_case]
       start = Time.now
       cmd = test_cmd % client
       ##cmd = 'ls -l'
       puts "\n\nRUNNING: #{cmd}"
       puts `#{cmd}`
       elapsed = Time.now - start
+      stats[client][test_case]['cmd']     = cmd
       stats[client][test_case]['elapsed'] = elapsed
     end
   end
@@ -44,8 +64,9 @@ class TestHarness
   end
 
 end
+end
 
 
 if __FILE__ == $0
-  TestHarness.new.run
+  TestHarness::Runner.new.run(ARGV.clone)
 end
