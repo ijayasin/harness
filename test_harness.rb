@@ -10,8 +10,8 @@ module TestHarness
 class Runner
 
   TEST_CASES = {
-    'serialize'        => "%s --serialize --object $$TYPE$$ -f serialize.json",
-    'deserialize'      => "%s --deserialize --object $$TYPE$$ -f deserialize.json",
+    'serialize'        => "%s --serialize --object $$TYPE$$ -n $$NUMBER$$ -f serialize.json",
+    'deserialize'      => "%s --deserialize --object $$TYPE$$ -n $$NUMBER$$ -f deserialize.json",
     'echo'             => "%s --echo --object $$TYPE$$ --host $$HOST$$ -f echo.json",
     'modify_and_echo'  => "%s --modify_and_echo --object $$TYPE$$ --host $$HOST$$ --increment $$INCREMENT_KEY$$ --replace_key $$REPLACE_KEY$$ --replace_value $$REPLACE_VALUE$$ -f $$FILE$$"
   }.freeze
@@ -107,6 +107,7 @@ class Runner
     str = str.gsub('$$REPLACE_VALUE$$', params['replace_value'] )
     str = str.gsub('$$FILE$$',          File.expand_path(params['file'])  )
     str = str.gsub('$$HOST$$',          @options.host || 'HOST_IS_MISSING')
+    str = str.gsub('$$NUMBER$$',        params['number'] )
     str
   end
 
