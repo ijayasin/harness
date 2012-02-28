@@ -28,7 +28,7 @@ module TestHarness
 
         test_cases_keys = TestHarness::Runner::TEST_CASES.keys
         
-        opts.on("--test-cases ", test_cases_keys, test_cases_keys.join(" ")) do |list|
+        opts.on("--test-cases ", test_cases_keys, "One or more Test Cases (%s)" % test_cases_keys.join(" ")) do |list|
           options.test_cases = list
         end
 
