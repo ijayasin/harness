@@ -60,6 +60,8 @@ class Runner
     end
 
     pp stats
+
+    StatsWriter.new(@start_time, :path=>@options.stats_path).save(@stats)
   end
 
   def test(client)
