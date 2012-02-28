@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages: ['corechart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        <% tests.each do |test| %>
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Object Size');
+        <% clients.each do |client| %>
+        data.addColumn('number', '<%= client %>');
+        <% end %>
+        data.addRows([
+        <% inputs.each do |input| %>
+          ['<%= input %>'
+            <% clients.each do |client| %>
+            ,<%= data[client][test][input] %>
+            <% end %>
+          ],
+        <% end %>
+        ]);
+
+        var options = {
+          title: '<%= test %>',
+          hAxis: {title: 'Input'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('<%= test %>_div'));
+        chart.draw(data, options);
+        <% end %>
+      }
+    </script>
+  </head>
+  <body>
+    <% tests.each do |test| %>
+    <div id="<%= test %>_div" style="width: 900px; height: 500px;"></div>
+    <% end %>
+  </body>
+</html>
