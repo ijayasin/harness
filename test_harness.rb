@@ -4,6 +4,7 @@ $:.unshift(File.dirname(__FILE__))
 require 'rubygems'
 require 'erubis'
 require 'test_harness/option_parser'
+require 'test_harness/stats_writer'
 
 module TestHarness
 class Runner
@@ -15,7 +16,7 @@ class Runner
     'modify_and_echo'  => "%s --modify_and_echo --object $$TYPE$$ --host $$HOST$$ --increment $$INCREMENT_KEY$$ --replace_key $$REPLACE_KEY$$ --replace_value $$REPLACE_VALUE$$ -f $$FILE$$"
   }.freeze
 
-  CLIENTS = %w(./avro ./messagepack ./protobufs ./rest_json ./thrift ./websockets).freeze
+  CLIENTS = %w(./clients/avro ./clients/messagepack ./clients/protobufs ./clients/rest_json ./clients/thrift ./clients/websockets).freeze
 
   MODIFY_ECHO_PARAMS = [
     {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle.json'         },
@@ -100,7 +101,7 @@ class Runner
     str = str.gsub('$$INCREMENT_KEY$$', params['increment_key'] )
     str = str.gsub('$$REPLACE_KEY$$',   params['replace_key']   )
     str = str.gsub('$$REPLACE_VALUE$$', params['replace_value'] )
-    str = str.gsub('$$FILE$$',          params['file']          )
+    str = str.gsub('$$FILE$$',          File.expand_path(params['file'])  )
     str = str.gsub('$$HOST$$',          @options.host || 'HOST_IS_MISSING')
     str
   end
