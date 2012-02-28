@@ -1,6 +1,8 @@
 #!/usr/bin/ruby
 
 $:.unshift(File.dirname(__FILE__))
+require 'rubygems'
+require 'erubis'
 require 'test_harness/option_parser'
 require 'test_harness/stats_writer'
 
@@ -14,16 +16,17 @@ class Runner
     'modify_and_echo'  => "%s --modify_and_echo --object $$TYPE$$ --host $$HOST$$ --increment $$INCREMENT_KEY$$ --replace_key $$REPLACE_KEY$$ --replace_value $$REPLACE_VALUE$$ -f $$FILE$$"
   }.freeze
 
-  CLIENTS = %w(./clients/avro ./clients/messagepack ./clients/protobufs ./clients/rest_json ./clients/thrift ./clients/websockets).freeze
+  CLIENTS = Dir.glob("./clients/*").freeze
+  INPUTS = Dir.glob("./inputs/*").freeze
 
-  MODIFT_ECHO_PARAMS = [
-    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/bundle.json'         },
-    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/bundle_big.json'     },
-    {'type' => 'creative',       'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/creative.json'       },
-    {'type' => 'line_item',      'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/line_item.json'      },
-    {'type' => 'lisp_stats',     'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/lisp_stats.json'     },
-    {'type' => 'org',            'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/org.json'            },
-    {'type' => 'site_placement', 'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/site_placement.json' }
+  MODIFY_ECHO_PARAMS = [
+    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle.json'         },
+    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle_big.json'     },
+    {'type' => 'creative',       'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'creative.json'       },
+    {'type' => 'line_item',      'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'line_item.json'      },
+    {'type' => 'lisp_stats',     'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'lisp_stats.json'     },
+    {'type' => 'org',            'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'org.json'            },
+    {'type' => 'site_placement', 'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'site_placement.json' }
   ]
 
   SPECIAL_TESTS = %w(modify_and_echo)
@@ -81,7 +84,7 @@ class Runner
 
   def modify_and_echo(client, test_case, test_cmd)
     puts "\n\nMODIFY_AND_ECHO   CLIENT=#{client}  TEST_CASE=#{test_case}  TEST_CMD=#{test_cmd}"
-    MODIFT_ECHO_PARAMS.each do |params|
+    MODIFY_ECHO_PARAMS.each do |params|
       start = Time.now
       test_case_type = "#{test_case}-#{params['type']}"
       cmd   = replace_placeholders(test_cmd, params)
@@ -109,7 +112,14 @@ class Runner
   end
 
   def graph_results(results)
-
+    template_file = "results.html.erb"
+    template = Erubis::Eruby.load_file(template_file)
+    template.result({
+      :clients => CLIENTS,
+      :tests => TEST_CASES.keys,
+      :objects => MODIFY_ECHO_PARAMS.collect {|p| p['type']},
+      :data => data # data is a nested hash: data[client][test][object]
+    })
   end
 
 end
