@@ -12,6 +12,7 @@ module TestHarness
       opts = OpenStruct.new
       opts.clients    = nil
       opts.test_cases = nil
+      opts.host       = nil
       opts
     end
 
@@ -30,6 +31,10 @@ module TestHarness
         
         opts.on("--test-cases ", test_cases_keys, "One or more Test Cases (%s)" % test_cases_keys.join(" ")) do |list|
           options.test_cases = list
+        end
+
+        opts.on("--host HOST_NAME", "Specify the host of the server.") do |host|
+          options.host = host
         end
 
         opts.on("-h", "--help", "Show this message") do
