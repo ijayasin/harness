@@ -2,6 +2,7 @@
 
 $:.unshift(File.dirname(__FILE__))
 require 'test_harness/option_parser'
+require 'test_harness/stats_writer'
 
 module TestHarness
 class Runner
@@ -13,16 +14,16 @@ class Runner
     'modify_and_echo'  => "%s --modify_and_echo --object $$TYPE$$ --host $$HOST$$ --increment $$INCREMENT_KEY$$ --replace_key $$REPLACE_KEY$$ --replace_value $$REPLACE_VALUE$$ -f $$FILE$$"
   }.freeze
 
-  CLIENTS = %w(./avro ./messagepack ./protobufs ./rest_json ./thrift ./websockets).freeze
+  CLIENTS = %w(./clients/avro ./clients/messagepack ./clients/protobufs ./clients/rest_json ./clients/thrift ./clients/websockets).freeze
 
   MODIFT_ECHO_PARAMS = [
-    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle.json'         },
-    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'bundle_big.json'     },
-    {'type' => 'creative',       'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'creative.json'       },
-    {'type' => 'line_item',      'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'line_item.json'      },
-    {'type' => 'lisp_stats',     'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'lisp_stats.json'     },
-    {'type' => 'org',            'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'org.json'            },
-    {'type' => 'site_placement', 'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'site_placement.json' }
+    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/bundle.json'         },
+    {'type' => 'bundle',         'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/bundle_big.json'     },
+    {'type' => 'creative',       'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/creative.json'       },
+    {'type' => 'line_item',      'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/line_item.json'      },
+    {'type' => 'lisp_stats',     'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/lisp_stats.json'     },
+    {'type' => 'org',            'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/org.json'            },
+    {'type' => 'site_placement', 'increment_key' => 'inc_k', 'replace_key' => 'rep_k', 'replace_value' => 'rep_val', 'file' => 'data/site_placement.json' }
   ]
 
   SPECIAL_TESTS = %w(modify_and_echo)
@@ -98,7 +99,7 @@ class Runner
     str = str.gsub('$$INCREMENT_KEY$$', params['increment_key'] )
     str = str.gsub('$$REPLACE_KEY$$',   params['replace_key']   )
     str = str.gsub('$$REPLACE_VALUE$$', params['replace_value'] )
-    str = str.gsub('$$FILE$$',          params['file']          )
+    str = str.gsub('$$FILE$$',          File.expand_path(params['file'])  )
     str = str.gsub('$$HOST$$',          @options.host || 'HOST_IS_MISSING')
     str
   end
