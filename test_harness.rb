@@ -17,7 +17,7 @@ class Runner
   }.freeze
 
   INPUTS  = Dir.glob("./inputs/*").freeze
-  CLIENTS = Dir.glob("~/git/api-rally/*/*.sh").freeze
+  CLIENTS = Dir.glob("/Users/martinbrown/git/api-rally/*/*\.sh").freeze
 
   MODIFY_ECHO_PARAMS = [
     {'type' => 'bundle',         'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'BUNDLE',    'file' => 'bundle.json'         },
@@ -32,6 +32,9 @@ class Runner
   SPECIAL_TESTS = %w(modify_and_echo)
 
   def initialize
+    CLIENTS.each do |client|
+      puts client
+    end
     @start_time = Time.now
     @stats = Hash.new do |h,k|
       h[k] = Hash.new{|hh,kk| hh[kk] = {} }
@@ -56,7 +59,9 @@ class Runner
     @options = TestHarness::OptionParser.parse(args)
 
     clients.each do |client|
-      test client
+      Dir.chdir(File.dirname(client)) do
+        test client
+      end
     end
 
     pp stats
@@ -119,7 +124,7 @@ class Runner
     template_file = "results.html.erb"
     template = Erubis::Eruby.load_file(template_file)
     template.result({
-      :clients => CLIENTS,
+      :clients => CLIENTS.collect { |client| File.basename(client) },
       :tests => TEST_CASES.keys,
       :objects => MODIFY_ECHO_PARAMS.collect {|p| p['type']},
       :data => data # data is a nested hash: data[client][test][object]
