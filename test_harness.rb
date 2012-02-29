@@ -17,7 +17,7 @@ class Runner
   }.freeze
 
   INPUTS  = Dir.glob("./inputs/*").freeze
-  CLIENTS = Dir.glob("/Users/martinbrown/git/api-rally/*/*\.sh").freeze
+  CLIENTS = Dir.glob(File.expand_path("/opt/apirally/api-rally/*/*\.sh")).freeze
 
   MODIFY_ECHO_PARAMS = [
     {'type' => 'bundle',         'increment_key' => 'id',    'replace_key' => 'name',  'replace_value' => 'BUNDLE',    'file' => 'bundle.json'         },
@@ -112,7 +112,7 @@ class Runner
     str = str.gsub('$$REPLACE_VALUE$$', params['replace_value'] )
     str = str.gsub('$$FILE$$',          File.expand_path(params['file'])  )
     str = str.gsub('$$HOST$$',          @options.host || 'HOST_IS_MISSING')
-    str = str.gsub('$$NUMBER$$',        params['number'] )
+    str = str.gsub('$$NUMBER$$',        params['number'] || '10' )
     str
   end
 
