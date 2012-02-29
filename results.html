@@ -1,0 +1,113 @@
+<html>
+  <head>
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages: ['corechart']});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Object Size');
+        data.addColumn('number', 'lovesocket.sh');
+        data.addRows([
+          ['lineitem-10'
+            ,0.092455
+          ],
+          ['lineitem-100'
+            ,0.128344
+          ],
+          ['lineitem-1000'
+            ,0.350858
+          ],
+          ['lineitem-10000'
+            ,2.437325
+          ],
+          ['org-10'
+            ,0.084673
+          ],
+          ['org-100'
+            ,0.097431
+          ],
+          ['org-1000'
+            ,0.196293
+          ],
+          ['org-10000'
+            ,1.07387
+          ],
+          ['siteplacement-10'
+            ,0.096594
+          ],
+          ['siteplacement-100'
+            ,0.143294
+          ],
+          ['siteplacement-1000'
+            ,0.45798
+          ],
+          ['siteplacement-10000'
+            ,3.531913
+          ],
+        ]);
+
+        var options = {
+          title: 'serialize',
+          hAxis: {title: 'Input'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('serialize_div'));
+        chart.draw(data, options);
+        var data = new google.visualization.DataTable();
+        data.addColumn('string', 'Object Size');
+        data.addColumn('number', 'lovesocket.sh');
+        data.addRows([
+          ['lineitem-10'
+            ,0.003122
+          ],
+          ['lineitem-100'
+            ,0.002334
+          ],
+          ['lineitem-1000'
+            ,0.002367
+          ],
+          ['lineitem-10000'
+            ,0.002421
+          ],
+          ['org-10'
+            ,0.002252
+          ],
+          ['org-100'
+            ,0.00228
+          ],
+          ['org-1000'
+            ,0.002289
+          ],
+          ['org-10000'
+            ,0.002524
+          ],
+          ['siteplacement-10'
+            ,0.002281
+          ],
+          ['siteplacement-100'
+            ,0.002268
+          ],
+          ['siteplacement-1000'
+            ,0.002297
+          ],
+          ['siteplacement-10000'
+            ,0.002346
+          ],
+        ]);
+
+        var options = {
+          title: 'deserialize',
+          hAxis: {title: 'Input'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('deserialize_div'));
+        chart.draw(data, options);
+      }
+    </script>
+  </head>
+  <body>
+    <div id="serialize_div" style="width: 900px; height: 500px;"></div>
+    <div id="deserialize_div" style="width: 900px; height: 500px;"></div>
+  </body>
+</html>

@@ -23,7 +23,8 @@
 
         var options = {
           title: '<%= test %>',
-          hAxis: {title: 'Input'}
+          hAxis: {title: 'Input'},
+	  vAxis: {title: 'Time (Seconds)'}
         };
 
         var chart = new google.visualization.ColumnChart(document.getElementById('<%= test %>_div'));
