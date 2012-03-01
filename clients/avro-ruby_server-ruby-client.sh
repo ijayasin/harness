@@ -4,4 +4,4 @@
 source /usr/local/rvm/environments/ruby-1.9.3-p125@avro
 
 cd /opt/apirally/api-rally/avro/src/ruby
-./cli.rb $@
+./cli.rb --port 9091 $@
