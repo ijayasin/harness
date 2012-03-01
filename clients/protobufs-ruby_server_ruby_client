@@ -3,5 +3,5 @@
 # load rvm ruby
 source /usr/local/rvm/environments/ruby-1.9.3-p125@protobufs
 
-cd /opt/apirally/api-rally/protobuf/server_ruby
-./server.rb $@
+cd /opt/apirally/api-rally/protobuf/client_ruby
+./client $@
